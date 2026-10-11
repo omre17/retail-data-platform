@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:17.11
+    environment:
+      POSTGRES_DB: retail
+      POSTGRES_USER: retail
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U retail -d retail"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  source_api:
+    image: python:3.13-slim
+    working_dir: /app
+    command: python -m src.mock_store_api
+    volumes:
+      - ./src:/app/src:ro
+      - ./data/raw:/app/data/raw:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"]
+      interval: 2s
+      timeout: 3s
+      retries: 10
+
+  pipeline:
+    build: .
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      SOURCE_API_BASE_URL: http://source_api:8000
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+      source_api:
+        condition: service_healthy
+
+  airflow:
+    profiles: [airflow]
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    command: standalone
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: admin:admin
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      SOURCE_API_BASE_URL: http://source_api:8000
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - airflow_data:/opt/airflow
+      - ./dags:/opt/airflow/dags:ro
+      - ./data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+      source_api:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  airflow_data:

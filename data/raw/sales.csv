@@ -1,0 +1,8 @@
+order_id,line_number,order_date,customer_id,product_id,quantity,unit_price,status
+1001,1,2026-09-01,C001,P001,2,120.00,completed
+1001,2,2026-09-01,C001,P002,1,75.50,completed
+1002,1,2026-09-02,C002,P003,4,25.00,completed
+1003,1,2026-09-03,C003,P001,1,120.00,canceled
+1004,1,2026-09-04,C002,P002,3,75.50,completed
+1005,1,2026-09-05,C004,P003,0,25.00,completed
+1001,1,2026-09-01,C001,P001,2,120.00,completed

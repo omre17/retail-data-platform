@@ -1,0 +1,7 @@
+[
+  {"product_id": "P001", "product_name": "Travel mug", "category": "Home"},
+  {"product_id": "P002", "product_name": "Desk lamp", "category": "Home"},
+  {"product_id": "P003", "product_name": "Notebook", "category": "Stationery"},
+  {"product_id": "P004", "product_name": "Water bottle", "category": "Outdoors"},
+  {"product_id": "P005", "product_name": "Headphones", "category": "Electronics"}
+]

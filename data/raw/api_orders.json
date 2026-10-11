@@ -1,0 +1,12 @@
+[
+  {"order_id":"2101","order_date":"2026-10-07","customer_id":"C001","status":"completed","items":[
+    {"product_id":"P001","quantity":2,"unit_price":"120.00"},
+    {"product_id":"P003","quantity":1,"unit_price":"39.90"}
+  ]},
+  {"order_id":"2102","order_date":"2026-10-07","customer_id":"C002","status":"canceled","items":[
+    {"product_id":"P004","quantity":1,"unit_price":"89.00"}
+  ]},
+  {"order_id":"2103","order_date":"2026-10-08","customer_id":"C003","status":"completed","items":[
+    {"product_id":"P005","quantity":1,"unit_price":"199.00"}
+  ]}
+]

@@ -1,0 +1,7 @@
+FROM apache/airflow:3.3.2-python3.12
+
+WORKDIR /app
+COPY --chown=airflow:root requirements.txt ./
+RUN pip install --no-cache-dir "apache-airflow==3.3.2" -r requirements.txt
+COPY --chown=airflow:root src/ ./src/
+COPY --chown=airflow:root sql/ ./sql/
